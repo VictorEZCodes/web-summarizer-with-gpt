@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         summaryOutput.textContent = 'Loading...';
 
-        fetch('/summarize', { // Use relative URL to ensure it works both locally and on Heroku
+        fetch('/summarize', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
