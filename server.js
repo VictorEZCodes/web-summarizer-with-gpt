@@ -1,4 +1,4 @@
-require('dotenv').config(); 
+require('dotenv').config(); // Load environment variables
 
 const express = require('express');
 const puppeteer = require('puppeteer');
@@ -12,8 +12,11 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 app.use(express.json());
 app.use(cors());
+
+// Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Define the route for the root URL
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -28,8 +31,17 @@ app.post('/summarize', async (req, res) => {
         console.log(`Fetching content from: ${url}`);
 
         // Launch headless browser with Puppeteer
+        // const browser = await puppeteer.launch({
+        //     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        //     headless: true,
+        // });
         const browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--single-process'
+            ],
             headless: true
         });
         const page = await browser.newPage();
@@ -73,7 +85,7 @@ if (process.env.NODE_ENV !== 'production') {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
 } else {
-    app.listen(PORT);
+    app.listen(PORT); // Make sure the app listens on Heroku
 }
 
 module.exports = app;
